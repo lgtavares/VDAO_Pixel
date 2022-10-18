@@ -2,7 +2,7 @@ data/*
 models/*
 results/*
 .vscode
-
+VDAO_Pixel.egg-info/
 __pycache__/
 *.py[cod]
 *$py.class
@@ -12,4 +12,4 @@ __pycache__/
 
 # keep
 !dataset/.keep
-.vscode/settings.json
+# .vscode/settings.json

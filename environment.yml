@@ -1,3 +1,4 @@
+# conda env export --from-history | grep -v "prefix" > environment.yml
 name: pixel_env
 channels:
   - pytorch
@@ -21,4 +22,3 @@ dependencies:
   - scikit-image
   - torchvision
   - jupyter_contrib_nbextensions
-prefix: /home/luiz.tavares/.local/miniconda3/envs/pixel_env
