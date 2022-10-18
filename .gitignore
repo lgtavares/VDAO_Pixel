@@ -1,8 +1,7 @@
-dataset/VDAO_AS/*
-dataset/res/*
+data/*
+models/*
+results/*
 .vscode
-notebooks/dask-worker-space/*
-dask-worker-space/*
 
 __pycache__/
 *.py[cod]
