@@ -1,0 +1,16 @@
+dataset/VDAO_AS/*
+dataset/res/*
+.vscode
+notebooks/dask-worker-space/*
+dask-worker-space/*
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.out
+
+.ipynb_checkpoints
+
+# keep
+!dataset/.keep
+.vscode/settings.json
