@@ -1,0 +1,24 @@
+name: pixel_env
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - matplotlib
+  - pandas
+  - scipy
+  - scikit-learn
+  - pytorch=1.10
+  - seaborn
+  - lightgbm
+  - jupyter
+  - opencv
+  - optuna
+  - ca-certificates
+  - certifi
+  - openssl
+  - scikit-optimize
+  - scikit-image
+  - torchvision
+  - jupyter_contrib_nbextensions
+prefix: /home/luiz.tavares/.local/miniconda3/envs/pixel_env
