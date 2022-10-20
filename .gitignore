@@ -1,6 +1,7 @@
 data/*
 models/*
 results/*
+extra/*
 .vscode
 VDAO_Pixel.egg-info/
 __pycache__/
