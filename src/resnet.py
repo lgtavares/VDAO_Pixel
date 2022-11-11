@@ -3,12 +3,14 @@ import torchvision.models as models
 from PIL import Image
 
 MEAN_IMAGENET = [0.485, 0.456, 0.406]
-STD_IMAGENET  = [0.229, 0.224, 0.225]
+STD_IMAGENET = [0.229, 0.224, 0.225]
+
 
 class Resnet50():
 
     def __init__(self, device=None, pretrained=True):
-        self.resnet50 = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
+        self.resnet50 = models.resnet50(
+            weights=models.ResNet50_Weights.DEFAULT)
         if device is None:
             device = 'cpu'
         self._send_model_to_device(device)
@@ -17,12 +19,18 @@ class Resnet50():
         self.hooks = {}
 
         # Com hook: residual3
-        self._layers_points = {'residual3': {'layer_name': 'layer1', 'id_module': '2'}}
+        self._layers_points = {
+            'residual3': {
+                'layer_name': 'layer1',
+                'id_module': '2'
+            }
+        }
 
     def __call__(self, frame_RGB):
         # Transform image and pass it throught the network
         image = Image.fromarray(frame_RGB)
-        t_img = self.transformations(image).float().to(self.device).unsqueeze(0)
+        t_img = self.transformations(image).float().to(
+            self.device).unsqueeze(0)
         return self.resnet50(t_img)
 
     def _send_model_to_device(self, device):
@@ -41,7 +49,8 @@ class Resnet50():
             hook = self.resnet50._modules.get(
                 self._layers_points[layer_name]['layer_name'])._modules.get(
                     self._layers_points[layer_name]['id_module'])
-        self.hooks[layer_name] = hook.register_forward_hook(callback(parameters_callback))
+        self.hooks[layer_name] = hook.register_forward_hook(
+            callback(parameters_callback))
 
     def _remove_all_hooks(self):
         for hook in self.hooks:
@@ -49,7 +58,9 @@ class Resnet50():
         self.hooks.clear()
 
     def get_features(self, image, layer_to_extract):
+
         def features_extracted_callback(parameters):
+
             def hook(m, i, o):
                 assert parameters['layer_name'] == layer_to_extract
                 self._features_extracted = o.data.squeeze()
@@ -59,13 +70,13 @@ class Resnet50():
         if layer_to_extract not in self.hooks:
             self._add_hook(layer_to_extract, features_extracted_callback,
                            {'layer_name': layer_to_extract})
-        
+
         t_img = image.float().to(self.device)
 
         self.resnet50(t_img)
         return self._features_extracted
 
-        
+
 class Resnet50_Reduced():
 
     MEAN_IMAGENET = [0.485, 0.456, 0.406]
@@ -77,9 +88,11 @@ class Resnet50_Reduced():
         if device is None:
             device = 'cpu'
 
-        # Corta a resnet50 para ficar somente com as camadas iniciais (até a residual3).
-        self.resnet50 = torch.nn.Sequential(
-            *list(models.resnet50(weights=models.ResNet50_Weights.DEFAULT).children())[0:5])
+        # Corta a resnet50 para ficar somente com as
+        # camadas iniciais (até a residual3).
+        self.resnet50 = torch.nn.Sequential(*list(
+            models.resnet50(
+                weights=models.ResNet50_Weights.DEFAULT).children())[0:5])
         if learning:
             self.resnet50.train()
         else:
@@ -97,7 +110,8 @@ class Resnet50_Reduced():
 
     def __call__(self, frame_RGB):
         # image = Image.fromarray(frame_RGB.float().to(self.device))
-        # t_img = self.transformations(image).float().to(self.device).unsqueeze(0)
+        # t_img = self.transformations(image)
+        # t_img = t_img.float().to(self.device).unsqueeze(0)
         if frame_RGB.device == self.resnet50:
             return self.resnet50(frame_RGB)
         else:
