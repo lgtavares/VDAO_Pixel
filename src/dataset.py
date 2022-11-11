@@ -32,9 +32,9 @@ class VDAODataset(Dataset):
     def __init__(self,
                  fold  = 0,
                  split = 0,
-                 data_path = '/nfs/proc/luiz.tavares/VDAO_Database/',
+                 data_path = '/nfs/proc/luiz.tavares/VDAO_Database/data/',
                  type = 'training',
-                 alignment = 'elastic',
+                 alignment = 'warp',
                  transform = False,
                  patch=False):
 
@@ -86,7 +86,7 @@ class VDAODataset(Dataset):
         
         for fold_num in fold_set:
             # Get alignment files
-            algn_file = os.path.join(PROJECT_DIR, 'dataset/alignment', 
+            algn_file = os.path.join(PROJECT_DIR, 'data/alignment', 
                             'geometric_{0}_fold{1:02d}.csv'.format(fold_type, fold_num))
             algn = pd.read_csv(algn_file, index_col=0)
             if self.align_df.shape[0] == 0:
@@ -96,7 +96,8 @@ class VDAODataset(Dataset):
             
             
             # Get list of files
-            self.tar_list.extend(glob.glob(os.path.join(self.tar_path, 'fold{0:02d}'.format(fold_num),'*.png')))
+            self.tar_list.extend([os.path.join(self.tar_path, 'fold{0:02d}'.format(fold_num),'{0:04d}.png'.format(idx))
+                                  for idx in list(self.align_df.index)])
             self.ref_list = [ii.replace(self.tar_path, self.ref_path) for ii in self.tar_list]
             self.sil_list = [ii.replace(self.tar_path, self.sil_path) for ii in self.tar_list]
 
@@ -120,7 +121,7 @@ class VDAODataset(Dataset):
     def _crop(self, img, heigth, width):
         w_border = (img.shape[1] - width)//2
         h_border = (img.shape[0] - heigth)//2
-        return img[h_border:h_border+img.shape[0], w_border:w_border+img.shape[1],...]
+        return img[h_border:h_border+heigth, w_border:w_border+width,...]
         
     
     def __getitem__(self, idx):
@@ -151,7 +152,7 @@ class VDAODataset(Dataset):
         #     ref_frame = np.array(Image.open(self.ref_list[idx]))
         #     tar_frame = np.array(Image.open(self.tar_list[idx]))
                
-
+        
         info = self._get_info(idx)
 
         return ref_frame, tar_frame, sil_frame, info
