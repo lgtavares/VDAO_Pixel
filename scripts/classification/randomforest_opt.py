@@ -19,8 +19,8 @@ from src.config import fold_split
 
 # Hyperparameters
 space = [
-    Integer(1, 150, name='trees'),
-    Integer(1, 150, name='max_depth'),
+    Integer(1, 200, name='trees'),
+    Integer(1, 200, name='max_depth'),
     Integer(0, 100, name='threshold'),
 ]
 
@@ -213,7 +213,7 @@ if __name__ == "__main__":
 
     # Fold classifier
     rf_class = VDAORandomForestClassifier(feature_dir=TRN_FEAT_DIR,
-                                          result_file=RES_OUT_DIR,
+                                          result_file=result_file,
                                           num_fold=num_fold,
                                           opt_file=opt_file,
                                           metric='MCC')
