@@ -136,7 +136,7 @@ class VDAORandomForestClassifier(BaseEstimator, ClassifierMixin):
 
     def fit_model(self):
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
             futures = [
                 executor.submit(self.__fold_eval, split_num)
                 for split_num in range(1, 9)
@@ -208,8 +208,9 @@ if __name__ == "__main__":
     TRN_FEAT_DIR = os.path.join(FEATURE_DIR, alignment, 'training')
 
     # Important files
-    result_file = RES_OUT_DIR + 'results_fold{0:02}.csv'.format(num_fold)
-    opt_file = RES_OUT_DIR + 'opt_fold{0:02}.plk'.format(num_fold)
+    result_file = os.path.join(RES_OUT_DIR,
+                               'results_fold{0:02}.csv'.format(num_fold))
+    opt_file = os.path.join(RES_OUT_DIR, 'opt_fold{0:02}.pkl'.format(num_fold))
 
     # Fold classifier
     rf_class = VDAORandomForestClassifier(feature_dir=TRN_FEAT_DIR,
@@ -260,7 +261,7 @@ MAP MACHINES
 3 - node-02-03
 4 - tampere
 5 - cordoba
-6 - taiwan
+6 - taiwan -> node-04-01
 7 - node-01-01
 8 - oslo
 9 - leiria
