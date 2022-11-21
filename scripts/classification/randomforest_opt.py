@@ -256,13 +256,13 @@ conda activate pixel_env; nohup nice -n 19 python3 \
         --n_fold 9 > rf_err9.out &
 
 MAP MACHINES
-1 - node-02-01
-2 - node-02-02
-3 - node-02-03
+1 - node-02-01  Ok
+2 - node-02-02  Ok
+3 - node-02-03  Ok
 4 - tampere
 5 - cordoba
 6 - taiwan -> node-04-01
-7 - node-01-01
-8 - oslo
-9 - leiria
+7 - node-01-01 -> node-02-03
+8 - oslo -> node-02-01
+9 - leiria -> node-02-02
 """
