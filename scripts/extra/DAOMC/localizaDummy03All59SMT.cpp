@@ -594,7 +594,7 @@ int main(int, char **)
 
 					string imageName = sstm.str();
 					imwrite(imageName, usaFim);
-					waitKey(1);
+					//waitKey(1);
 				}
 
 				gettimeofday(&tvterminapart, NULL);

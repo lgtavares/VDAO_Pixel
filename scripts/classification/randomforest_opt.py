@@ -199,7 +199,7 @@ if __name__ == "__main__":
         num_fold = int(sys.argv[2])
 
     num_steps = 300
-    alignment = 'warp'
+    alignment = 'geometric'
 
     # Paths
     RES_OUT_DIR = os.path.join(RESULT_DIR, 'RandomForest', alignment,
@@ -212,20 +212,66 @@ if __name__ == "__main__":
                                'results_fold{0:02}.csv'.format(num_fold))
     opt_file = os.path.join(RES_OUT_DIR, 'opt_fold{0:02}.pkl'.format(num_fold))
 
-    # Fold classifier
-    rf_class = VDAORandomForestClassifier(feature_dir=TRN_FEAT_DIR,
-                                          result_file=result_file,
-                                          num_fold=num_fold,
-                                          opt_file=opt_file,
-                                          metric='MCC')
+    # load result file
+    if os.path.exists(result_file):
 
-    # Optimization
-    opt_saver = CheckpointSaver(opt_file, compress=9)
-    res_gp = gp_minimize(objective,
-                         space,
-                         n_calls=num_steps,
-                         callback=[opt_saver],
-                         random_state=846)
+        res_dd = pd.read_csv(result_file, index_col=0)
+        res_dd = res_dd[[
+            'num_fold', 'step', 'num_split', 'trees', 'max_depth', 'threshold',
+            'tn', 'fp', 'fn', 'tp', 'MCC'
+        ]]
+        res_dd = res_dd.groupby(
+            ['num_fold', 'step', 'trees', 'max_depth',
+             'threshold']).aggregate({
+                 'tn': np.sum,
+                 'fp': np.sum,
+                 'fn': np.sum,
+                 'tp': np.sum
+             }).reset_index()
+        res_dd['MCC'] = res_dd.apply(
+            lambda x: MCC(x['tn'], x['fp'], x['fn'], x['tp']), axis=1)
+
+        step_init = res_dd.shape[0]
+        x_init = res_dd[['trees', 'max_depth', 'threshold']]
+        x_init['threshold'] = x_init['threshold'].astype('int')
+        x_init = x_init.values.tolist()
+        y_init = -res_dd['MCC']
+        y_init = y_init.values.tolist()
+
+        # Fold classifier
+        rf_class = VDAORandomForestClassifier(feature_dir=TRN_FEAT_DIR,
+                                              result_file=result_file,
+                                              num_fold=num_fold,
+                                              opt_file=opt_file,
+                                              initial_step=step_init,
+                                              metric='MCC')
+
+        # Optimization
+        opt_saver = CheckpointSaver(opt_file, compress=9)
+        res_gp = gp_minimize(objective,
+                             space,
+                             n_initial_points=0,
+                             x0=x_init,
+                             y0=y_init,
+                             n_calls=num_steps - step_init,
+                             callback=[opt_saver],
+                             random_state=79)
+
+    else:
+        # Fold classifier
+        rf_class = VDAORandomForestClassifier(feature_dir=TRN_FEAT_DIR,
+                                              result_file=result_file,
+                                              num_fold=num_fold,
+                                              opt_file=opt_file,
+                                              metric='MCC')
+
+        # Optimization
+        opt_saver = CheckpointSaver(opt_file, compress=9)
+        res_gp = gp_minimize(objective,
+                             space,
+                             n_calls=num_steps,
+                             callback=[opt_saver],
+                             random_state=846)
 """
 conda activate pixel_env; nohup nice -n 19 python3 \
     ~/Workspace/VDAO_Pixel/scripts/classification/randomforest_opt.py \
@@ -259,10 +305,22 @@ MAP MACHINES
 1 - node-02-01  Ok
 2 - node-02-02  Ok
 3 - node-02-03  Ok
-4 - tampere
-5 - cordoba
+4 - tampere Ok
+5 - cordoba -> node-01-01  -> node-02-01
 6 - taiwan -> node-04-01
-7 - node-01-01 -> node-02-03
-8 - oslo -> node-02-01
-9 - leiria -> node-02-02
+7 - node-01-01 -> node-02-03 -> node-01-03 -> node-02-02
+8 - oslo -> node-02-01 Ok
+9 - leiria -> node-02-02 Ok
+
+1 - leiria -> node-04-01
+2 - node-02-01
+3 - node-02-02
+4 - node-02-03
+5 - tampere
+6 - cordoba -> node-01-01
+7 - taiwan -> node-01-02
+8 - moscou -> node-01-03
+9 - oslo -> node-01-04
+killall python3
+
 """
