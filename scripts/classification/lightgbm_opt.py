@@ -97,7 +97,7 @@ class LGBMClassifier(BaseEstimator, ClassifierMixin):
 
         # saving results
         if self.step == 0:
-            self.results.to_csv(self.result_file, mode='a', header=True)
+            self.results.to_csv(self.result_file, mode='w', header=True)
         else:
             self.results.to_csv(self.result_file, mode='a', header=False)
 

@@ -34,6 +34,7 @@ class VDAORandomForestClassifier(BaseEstimator, ClassifierMixin):
                  opt_file='',
                  num_fold=0,
                  metric='MCC',
+                 initial_step=0,
                  random_seed=127):
         """
         Called when initializing the classifier
@@ -44,7 +45,7 @@ class VDAORandomForestClassifier(BaseEstimator, ClassifierMixin):
         self.metric = metric
         self.random_seed = random_seed
         self.result_file = result_file
-        self.step = 0
+        self.step = initial_step
 
         # list of splits to be computed
         self.split_list = fold_split[self.num_fold]
@@ -199,7 +200,7 @@ if __name__ == "__main__":
         num_fold = int(sys.argv[2])
 
     num_steps = 300
-    alignment = 'geometric'
+    alignment = 'temporal'
 
     # Paths
     RES_OUT_DIR = os.path.join(RESULT_DIR, 'RandomForest', alignment,
@@ -232,8 +233,8 @@ if __name__ == "__main__":
             lambda x: MCC(x['tn'], x['fp'], x['fn'], x['tp']), axis=1)
 
         step_init = res_dd.shape[0]
-        x_init = res_dd[['trees', 'max_depth', 'threshold']]
-        x_init['threshold'] = x_init['threshold'].astype('int')
+        x_init = res_dd[['trees', 'max_depth', 'threshold']].copy()
+        x_init['threshold'] = res_dd['threshold'].astype('int')
         x_init = x_init.values.tolist()
         y_init = -res_dd['MCC']
         y_init = y_init.values.tolist()
@@ -313,14 +314,22 @@ MAP MACHINES
 9 - leiria -> node-02-02 Ok
 
 1 - leiria -> node-04-01
-2 - node-02-01
-3 - node-02-02
-4 - node-02-03
+2 - node-02-01  Ok
+3 - node-02-02 Ok
+4 - node-02-03 Ok
 5 - tampere
-6 - cordoba -> node-01-01
-7 - taiwan -> node-01-02
-8 - moscou -> node-01-03
-9 - oslo -> node-01-04
+6 - cordoba -> node-01-01 -> node-02-01 Ok
+7 - taiwan -> node-01-02 -> node-02-02 Ok
+8 - moscou -> node-01-03 -> node-02-03
+9 - oslo -> node-01-04 -> node-02-03 Ok
+
+1 - node-02-02 OK
+2 - node-02-01 x
+3 - node-02-03 x
+4 - tampere
+5 - node-04-01
+6-
+
 killall python3
 
 """
