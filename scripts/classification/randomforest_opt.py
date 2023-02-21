@@ -137,7 +137,7 @@ class VDAORandomForestClassifier(BaseEstimator, ClassifierMixin):
 
     def fit_model(self):
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
             futures = [
                 executor.submit(self.__fold_eval, split_num)
                 for split_num in range(1, 9)
@@ -195,7 +195,7 @@ if __name__ == "__main__":
 
     # Num fold
     if len(sys.argv) == 1:
-        num_fold = 1
+        num_fold = 4
     else:
         num_fold = int(sys.argv[2])
 
@@ -234,7 +234,7 @@ if __name__ == "__main__":
 
         step_init = res_dd.shape[0]
         x_init = res_dd[['trees', 'max_depth', 'threshold']].copy()
-        x_init['threshold'] = res_dd['threshold'].astype('int')
+        x_init['threshold'] = res_dd['threshold'].astype('uint8')
         x_init = x_init.values.tolist()
         y_init = -res_dd['MCC']
         y_init = y_init.values.tolist()
@@ -324,12 +324,13 @@ MAP MACHINES
 9 - oslo -> node-01-04 -> node-02-03 Ok
 
 1 - node-02-02 OK
-2 - node-02-01 x
-3 - node-02-03 x
-4 - tampere
-5 - node-04-01
-6-
+2 - node-02-01 OK
+3 - node-02-02 OK
+4 - tampere    OK
 
-killall python3
-
+5 - node-04-01 -> node-02-02 -> node-02-01
+6 - node-02-01    OK
+7 - node-02-03    OK
+8 - moscou -> node-02-03
+9 - oslo -> tampere
 """

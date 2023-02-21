@@ -113,7 +113,7 @@ class VDAODataset(Dataset):
         self.align_df.reset_index(drop=True, inplace=True)
 
     def __len__(self):
-        return len(self.ref_list)
+        return len(self.align_df)
 
     def _adjust_silhouette(self, sil):
         z = sil.astype(float)
@@ -125,7 +125,8 @@ class VDAODataset(Dataset):
 
     def _get_info(self, idx):
         line = self.align_df.loc[idx]
-        return {'file': line.target_file, 'frame': line.target_frame}
+        return {'file': line.target_file, 'frame': line.target_frame,
+                'test_file': line.test_file, 'test_frame': line.test_frame}
 
     def _crop(self, img, heigth, width):
         w_border = (img.shape[1] - width) // 2

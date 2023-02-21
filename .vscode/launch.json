@@ -12,7 +12,7 @@
       "console": "integratedTerminal",
       "args": [
         "--n_fold",
-        "4"
+        "3"
       ]
     },
     {
