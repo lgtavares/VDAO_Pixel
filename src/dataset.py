@@ -28,7 +28,6 @@ sil_transform = transforms.Compose([resize_transform, to_tensor_transform])
 
 
 class VDAODataset(Dataset):
-
     def __init__(self,
                  fold=0,
                  split=0,
@@ -36,12 +35,14 @@ class VDAODataset(Dataset):
                  type='training',
                  alignment='warp',
                  transform=False,
+                 disable_crop=False,
                  patch=False):
 
         # Storing atributes
         self.fold = fold
         self.split = split
         self.type = type
+        self.disable_crop = disable_crop  # crop if needed
         self.data_path = data_path
         self.transform = transform
         self.alignment = alignment
@@ -125,13 +126,21 @@ class VDAODataset(Dataset):
 
     def _get_info(self, idx):
         line = self.align_df.loc[idx]
-        return {'file': line.target_file, 'frame': line.target_frame,
-                'test_file': line.test_file, 'test_frame': line.test_frame}
+        return {
+            'file': line.target_file,
+            'frame': line.target_frame,
+            'test_file': line.test_file,
+            'test_frame': line.test_frame
+        }
 
     def _crop(self, img, heigth, width):
-        w_border = (img.shape[1] - width) // 2
-        h_border = (img.shape[0] - heigth) // 2
-        return img[h_border:h_border + heigth, w_border:w_border + width, ...]
+        if not self.disable_crop:
+            w_border = (img.shape[1] - width) // 2
+            h_border = (img.shape[0] - heigth) // 2
+            return img[h_border:h_border + heigth, w_border:w_border + width,
+                       ...]
+        else:
+            return img
 
     def __getitem__(self, idx):
 
@@ -172,7 +181,7 @@ if __name__ == '__main__':
     dataset = VDAODataset(fold=1,
                           split=0,
                           type='validation',
-                          alignment='elastic',
+                          alignment='warp',
                           transform=True)
 
     ref_img, tar_img, sil_img, info = next(iter(dataset))

@@ -16,13 +16,20 @@ if len(sys.argv) == 1:
 else:
     fold_num = int(sys.argv[2])
     
+
 # Loading dataset
-vdao_geometric    = VideoVDAODataset(fold_number=fold_num, split_number=0, 
+vdao_geometric    = VideoVDAODataset(fold_number=fold_num,
+                                     split_number=0, 
                                      align_file  = os.path.join(PROJECT_DIR,
                                                                'data/alignment/geometric_{0}_fold{1:02d}.csv'.format(fold_type, fold_num)),
                                      dataset_dir = '/nfs/proc/luiz.tavares/VDAO_Video/', 
-                                     type_dataset = fold_type, shuffle = False,  skip_frames = 0,
-                                     object_only=False, min_pixels=0, transformations = [], geometric=False)
+                                     type_dataset = fold_type,
+                                     shuffle = False,
+                                     skip_frames = 0,
+                                     object_only=False,
+                                     min_pixels=0,
+                                     transformations = [],
+                                     geometric=False)
 
 fold_df = vdao_geometric.frames
 videos  = fold_df.target_file.unique()

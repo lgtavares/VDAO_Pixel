@@ -23,14 +23,14 @@ class_dir = os.path.join(DATA_DIR, 'classifiers')
 # Selecting alignment
 # alignments = ['temporal', 'geometric', 'warp']
 
-if len(sys.argv) > 2:
+if len(sys.argv) > 5:
     classifier = str(sys.argv[2])
     alignment = str(sys.argv[4])
     fold = int(sys.argv[6])
 else:
-    classifier = 'RandomForest'
-    alignment = 'temporal'
-    fold = 3
+    classifier = 'LightGBM'
+    alignment = 'warp'
+    fold = 1
 
 # Selecting fold
 # Selecting split
@@ -92,8 +92,12 @@ for split in tqdm(range(1, 9), desc='split'):
 
         # Prediction
         X = feat.view(512, -1).T
-        y = cls.predict_proba(X)[:, 1].reshape((90, 160))
-
+        if classifier == 'RandomForest':
+            y = cls.predict_proba(X)[:, 1].reshape((90, 160))
+        elif classifier == 'LightGBM':
+            y = cls.predict(X).reshape((90, 160))
+        else:
+            pass
         # saving
         out_dict['prediction'][file][frame, :, :] = torch.Tensor(y)
         out_dict['silhouette'][file][frame, :, :] = sil
@@ -102,37 +106,46 @@ for split in tqdm(range(1, 9), desc='split'):
 """
 conda activate pixel_env; nohup nice -n 19 python3\
     ~/Workspace/VDAO_Pixel/scripts/postprocessing/save_post_data.py \
-    --class RandomForest --align temporal --fold 1 > lgbm_data.out &
+    --class LightGBM --align warp --fold 1 > lgbm_data.out &
 
 conda activate pixel_env; nohup nice -n 19 python3\
     ~/Workspace/VDAO_Pixel/scripts/postprocessing/save_post_data.py \
-    --class RandomForest --align temporal --fold 2 > lgbm_data.out &
+    --class LightGBM --align warp --fold 2 > lgbm_data.out &
 
 conda activate pixel_env; nohup nice -n 19 python3\
     ~/Workspace/VDAO_Pixel/scripts/postprocessing/save_post_data.py \
-    --class RandomForest --align temporal --fold 3 > lgbm_data.out &
+    --class LightGBM --align warp --fold 3 > lgbm_data.out &
 
 conda activate pixel_env; nohup nice -n 19 python3\
     ~/Workspace/VDAO_Pixel/scripts/postprocessing/save_post_data.py \
-    --class RandomForest --align temporal --fold 4 > lgbm_data.out &
+    --class LightGBM --align warp --fold 4 > lgbm_data.out &
 
 conda activate pixel_env; nohup nice -n 19 python3\
     ~/Workspace/VDAO_Pixel/scripts/postprocessing/save_post_data.py \
-    --class RandomForest --align temporal --fold 5 > lgbm_data.out &
+    --class LightGBM --align warp --fold 5 > lgbm_data.out &
 
 conda activate pixel_env; nohup nice -n 19 python3\
     ~/Workspace/VDAO_Pixel/scripts/postprocessing/save_post_data.py \
-    --class RandomForest --align temporal --fold 6 > lgbm_data.out &
+    --class LightGBM --align warp --fold 6 > lgbm_data.out &
 
 conda activate pixel_env; nohup nice -n 19 python3\
     ~/Workspace/VDAO_Pixel/scripts/postprocessing/save_post_data.py \
-    --class RandomForest --align temporal --fold 7 > lgbm_data.out &
+    --class LightGBM --align warp --fold 7 > lgbm_data.out &
 
 conda activate pixel_env; nohup nice -n 19 python3\
     ~/Workspace/VDAO_Pixel/scripts/postprocessing/save_post_data.py \
-    --class RandomForest --align temporal --fold 8 > lgbm_data.out &
+    --class LightGBM --align warp --fold 8 > lgbm_data.out &
 
 conda activate pixel_env; nohup nice -n 19 python3\
     ~/Workspace/VDAO_Pixel/scripts/postprocessing/save_post_data.py \
-    --class RandomForest --align temporal --fold 9 > lgbm_data.out &
+    --class LightGBM --align warp --fold 9 > lgbm_data.out &
 """
+# Fold 1: node-02-01
+# Fold 2: node-02-02
+# Fold 3: node-02-03
+# Fold 4: node-04-01
+# Fold 5: cordoba -> node-02-01
+# Fold 6: moscou
+# Fold 7: oslo -> node-02-02
+# Fold 8: taiwan
+# Fold 9: leiria

@@ -219,7 +219,7 @@ if __name__ == "__main__":
 
     # Num fold
     if len(sys.argv) == 1:
-        fold = 9
+        fold = 8
     else:
         fold = int(sys.argv[2])
 
@@ -227,8 +227,8 @@ if __name__ == "__main__":
     n_steps = 500
 
     # Experiment variables
-    classifier = 'RandomForest'
-    alignment = 'temporal'
+    classifier = 'LightGBM'
+    alignment = 'warp'
 
     # Paths
     RES_DIR = os.path.join(RESULT_DIR, classifier, alignment, 'postprocessing')
@@ -337,7 +337,6 @@ if __name__ == "__main__":
                              x0=initial_point,
                              random_state=72,
                              noise=1e-8)
-
 """
 conda activate pixel_env; nohup nice -n 19 python3\
     ~/Workspace/VDAO_Pixel/scripts/postprocessing/postprocessing_opt.py \
@@ -368,12 +367,12 @@ conda activate pixel_env; nohup nice -n 19 python3\
      --fold 9 > lgbm_post_opt.out &
 """
 
-# Fold 1: node-02-03
+# Fold 1: node-02-01
 # Fold 2: node-02-02
-# Fold 3: node-02-01
-# Fold 4: moscou
-# Fold 5: cordoba
-# Fold 6: node-01-01
-# Fold 7: tampere
-# Fold 8: node-04-01
-# Fold 9: node-01-02
+# Fold 3: node-02-03 -> moscou
+# Fold 4: node-04-01
+# Fold 5: node-01-01
+# Fold 6: node-01-02 -> node-04-01
+# Fold 7: node-01-03 -> cordoba
+# Fold 8: cordoba
+# Fold 9: moscou
