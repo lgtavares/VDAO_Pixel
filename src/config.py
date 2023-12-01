@@ -1,9 +1,10 @@
 # This is a configuration file intended to store the most used variables
 import torch
-import PIL
-PIL.PILLOW_VERSION = PIL.__version__
 import torchvision.transforms as transforms
 from src import VDAO_FRAMES_SHAPE
+
+# PIL.PILLOW_VERSION = PIL.__version__
+
 
 # Correspondence object index
 idx2object = {

@@ -22,10 +22,12 @@ tables_dir = os.path.join(output_dir, 'tables')
 if len(sys.argv) > 1:
     dbase = str(sys.argv[2])
 else:
-    dbase = 'LightGBM_warp'
+    dbase = 'mcDTSR/6'
 
 # Converting results
-results_csv = os.path.join(tables_dir, '{0}_full_results.csv'.format(dbase))
+dbase_out = dbase.replace('/', '_')
+results_csv = os.path.join(tables_dir,
+                           '{0}_full_results.csv'.format(dbase_out))
 
 # Subfolders
 sil_path = os.path.join(output_dir, 'silhouette')
@@ -61,7 +63,6 @@ def object_eval(vid, gt):
 
     # vid - predicted frame
     # gt  - ground truth
-
     gth, tn, fp, fn, tp = 0, 0, 0, 0, 0
 
     # if ground truth has an object
@@ -69,7 +70,7 @@ def object_eval(vid, gt):
 
         gth = 1
 
-        # region inside bb
+        # regions inside and outside bb
         ins_region = (gt == 1).astype(np.uint8)
         out_region = (gt == 0).astype(np.uint8)
 
@@ -84,7 +85,6 @@ def object_eval(vid, gt):
 
         ins_blobs = np.unique(ins_region * blobs_img)
         out_blobs = np.unique(out_region * blobs_img)
-
         extra_blobs = [k for k in out_blobs if k not in ins_blobs]
 
         # Has extra blobs

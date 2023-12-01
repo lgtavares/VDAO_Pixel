@@ -3,6 +3,7 @@ import sys
 import torch
 import numpy as np
 import pandas as pd
+from time import time
 from src import FEATURE_DIR
 
 from src.dataset import VDAODataset
@@ -12,13 +13,15 @@ from torch.utils.data import DataLoader
 
 # Fold number
 if len(sys.argv) == 1:
-    type = 'training'
-    alignment = 'warp'
+    type = 'test'
+    alignment = 'temporal'
 else:
     type = str(sys.argv[2])
     alignment = str(sys.argv[4])
 
 resnet = Resnet50('cuda' if torch.cuda.is_available() else 'cpu')
+
+delta_time = 0
 
 for fold in range(1, 10):
     csv_file = os.path.join(FEATURE_DIR, alignment, type,
@@ -34,6 +37,8 @@ for fold in range(1, 10):
     loader = DataLoader(dataset, num_workers=1, batch_size=1, shuffle=False)
 
     for i_batch, (ref_frame, tar_frame, sil_frame, info) in enumerate(loader):
+
+        time_0 = time()
 
         # Concatenating tensors
         feat_tar = resnet.get_features(tar_frame, 'residual3')
@@ -56,6 +61,9 @@ for fold in range(1, 10):
             np.random.shuffle(pixels)
         else:
             pixels = list(range(0, tns_full.shape[0]))
+
+        time_1 = time()
+        delta_time += time_1 - time_0
 
         # info
         ii = np.tile([int(info['file']), int(info['frame'])], (len(pixels), 1))
@@ -82,15 +90,18 @@ for fold in range(1, 10):
             i_batch + 1, len(dataset), 100 * (i_batch + 1) / len(dataset),
             fold))
 
-    if os.path.isfile(os.path.join(FEATURE_DIR, 'debug.txt')):
-        with open(os.path.join(FEATURE_DIR, 'debug.txt'), 'w+') as temp_file:
-            temp_file.write('Features: {0}, {1}, fold {2} finished.\n'.format(
-                type, alignment, fold))
-    else:
-        os.system('touch ' + os.path.join(FEATURE_DIR, 'debug.txt'))
-        with open(os.path.join(FEATURE_DIR, 'debug.txt'), 'w+') as temp_file:
-            temp_file.write('Features: {0}, {1}, fold {2} finished.\n'.format(
-                type, alignment, fold))
+# with open(os.path.join(FEATURE_DIR, 'time.txt'), 'w+') as temp_file:
+#     temp_file.write('Elapsed time: {0}.\n'.format(delta_time))
+
+# if os.path.isfile(os.path.join(FEATURE_DIR, 'debug.txt')):
+#     with open(os.path.join(FEATURE_DIR, 'debug.txt'), 'w+') as temp_file:
+#         temp_file.write('Features: {0}, {1}, fold {2} finished.\n'.format(
+#             type, alignment, fold))
+# else:
+#     os.system('touch ' + os.path.join(FEATURE_DIR, 'debug.txt'))
+#     with open(os.path.join(FEATURE_DIR, 'debug.txt'), 'w+') as temp_file:
+#         temp_file.write('Features: {0}, {1}, fold {2} finished.\n'.format(
+#             type, alignment, fold))
 """
 conda activate pixel_env; nohup nice -n 19 python3 \
     ~/Workspace/VDAO_Pixel/scripts/features/extract_features.py \

@@ -1,49 +1,18 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-  
     {
-      "name": "Python: Current File",
+      "name": "Python: Current File (Integrated Terminal)",
       "type": "python",
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal",
-      "args": []
-    },
-    {
-      "name": "(gdb) Launch",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${fileDirname}/DAOMC",
-      "args": [
-        "-g"
-      ],
-      "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
+      "env": {
+        "PYTHONPATH": "${cwd}"
+      },
+      "purpose": [
+        "debug-in-terminal"
       ]
     }
-  ],
-  "compounds": [
-    {
-      "name": "Python/C++",
-      "configurations": [
-        "Python: Current File",
-        "(gdb) Launch"
-      ],
-      "preLaunchTask": "${defaultBuildTask}",
-      "stopAll": true
-    }
-  ]
-}
+  }

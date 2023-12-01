@@ -34,6 +34,7 @@ class VDAODataset(Dataset):
                  data_path='/nfs/proc/luiz.tavares/VDAO_Database/data/',
                  type='training',
                  alignment='warp',
+                 ground_truth='silhouette',
                  transform=False,
                  disable_crop=False,
                  patch=False):
@@ -46,6 +47,7 @@ class VDAODataset(Dataset):
         self.data_path = data_path
         self.transform = transform
         self.alignment = alignment
+        self.ground_truth = ground_truth
 
         # directories
         if self.type != 'training':
