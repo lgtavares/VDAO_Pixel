@@ -1,13 +1,20 @@
 # Pixel-Based Change Detection in Moving-Camera Videos Using Twin Convolutional Features on a Data-Constrained Scenario
-------------
 
 * [Overview](#overview)  
+* [Requirements](#requirements)  
+* [Project Usage](#usage)  
+* [Results](#results)  
+
+
+<a name="overview"></a>
+## Overview
 
 The proposed anomaly detection framework is depicted in the figure below:
 
 ![Abandoned object proposed framework](https://github.com/lgtavares/VDAO_Pixel/assets/4022337/4cd0955f-096e-4ce3-8a39-34601b7a21d5)
 
-* [Requirements](#requirements)  
+<a name="requirements"></a>
+## Requirements
 
 ### Installing packages and libraries:
 
@@ -17,8 +24,8 @@ If you use conda/anaconda, use the file environment.yml to install the needed pa
 After that, to put the VDAO_Pixel package in the newly created environment, run:
 `python setup.py develop`
 
-
-* [Project Usage](#usage)  
+<a name="usage"></a>
+## Project Usage
 
 The main project code is organized in the following manner:
 
@@ -38,8 +45,8 @@ The main project code is organized in the following manner:
     - *test/*
 - *src/* - Store the main code with the classes, functions and libraries needed to run rhe scripts.
 
-
-* [Results](#results)  
+<a name="results"></a>
+## Results
 
 Below one can see the comparative tables between the previous state-of-the-art algorithms and the proposed PBCD-MC in the frame-level, in the object-level and in the pixel-level. The metrics used for such comparisons are the true-positive rate(TPR) and false-positive rate (FPR); the euclidean distance to the perfect classifier (DIS); and the Matthews Correlation Coefficient (MCC).
 
