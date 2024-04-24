@@ -44,6 +44,9 @@ The main project code is organized in the following manner:
 
 * [Results](#results)  
 
+Below one can see the comparative tables between the previous state-of-the-art algorithms and the proposed PBCD-MC in the frame-level, in the object-level and in the pixel-level. The metrics used for such comparisons are the true-positive rate(TPR) and false-positive rate (FPR); the euclidean distance to the perfect classifier (DIS); and the Matthews Correlation Coefficient (MCC).
+
+### TPR and FPR results 
 
 
 |   | **DAOMC[[1]](#1)**      | **ADMULT[[2]](#2)**    | **MCBS[[3]](#3)**    | **mcDTSR[[4]](#4)**     | **TCF-LMO[[5]](#5)**        | **PBCD-MC**    |
@@ -55,6 +58,7 @@ The main project code is organized in the following manner:
 | **TPR** | 0.675          | 0.651         | 0.025       | 0.580          | 0.809              | **0.907** |
 | **FPR** | 0.005          | 0.005         | 0.016       | 0.423          | 0.020              | **0.004** |
 
+### DIS results 
 
 |   | **DAOMC[[1]](#1)**      | **ADMULT[[2]](#2)**    | **MCBS[[3]](#3)**    | **mcDTSR[[4]](#4)**     | **TCF-LMO[[5]](#5)**        | **PBCD-MC**    |
 |:-------:|:--------------:|:-------------:|:-----------:|:--------------:|:------------------:|:--------------:|
@@ -68,6 +72,8 @@ The main project code is organized in the following manner:
 | **Median**  | 0.454             | 0.622          | -0.006       | -0.010         | 0.607              | **0.855**      |
 | **Overall** | 0.699             | 0.688          | 0.011        | 0.047          | 0.612              | **0.877**      |
 
+
+### MCC results 
 
 
 |   | **DAOMC[[1]](#1)**      | **ADMULT[[2]](#2)**    | **MCBS[[3]](#3)**    | **mcDTSR[[4]](#4)**     | **TCF-LMO[[5]](#5)**        | **PBCD-MC**    |
