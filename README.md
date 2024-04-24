@@ -5,10 +5,7 @@
 
 The proposed anomaly detection framework is depicted in the figure below:
 
-<p align="center">
-<img src="https://github.com/lgtavares/VDAO_Pixel/blob/master/doc/images/graphical_abstract.png?raw=true" align="center"/></p>
-
-![Abandoned object proposed framework](https://github.com/lgtavares/VDAO_Pixel/blob/master/doc/images/graphical_abstract.png)
+![Abandoned object proposed framework](https://github.com/lgtavares/VDAO_Pixel/assets/4022337/4cd0955f-096e-4ce3-8a39-34601b7a21d5)
 
 * [Requirements](#requirements)  
 
