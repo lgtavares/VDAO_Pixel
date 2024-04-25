@@ -7,7 +7,7 @@ from src.video_dataloader import  VideoVDAODataset
 fold_type = 'test'
 
 # Extracting frames
-for fold_num in range(7,10):
+for fold_num in range(1,10):
     
     # Loading dataset
     vdao_temporal    =  VideoVDAODataset(fold_number =fold_num, split_number=0, 

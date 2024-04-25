@@ -37,12 +37,31 @@ The main project code is organized in the following manner:
 - *results/* - Store the result tables, images and videos for every framework configuration.
 - *scripts/* - Store the scripts for each framework module.
     - *alignment/* - Scripts for the alignment module;
+        - *debug_alignment.py*: Generates videos for debugging the video alignment algorithms;
+        - *elastic_alignment.py*: Extract the database frames for the warp alignment case;
+        - *geometric_alignment.py*: Extract the database frames for the geometric alignment case;
+        - *extract_frames.py*: Extract the database frames for the temporal alignment case;
     - *classification/*
-    - *extra/*
+        - *randomforest_opt.py*: Run the Random Forest Hyperparameter optimization algorithm;
+        - *lightgbm_opt.py*: Run the LightGBM Hyperparameter optimization algorithm;
+        - *save_lightgbm_cls.py*: Save the LightGBM classifiers with the best hyperparameters found in the *lightgbm_opt.py* run;
+        - *save_randomforest_cls.py*: Save the Random Forest classifiers with the best hyperparameters found in the *randomforest_opt.py* run;  
+    - *extra/* - Contain scripts for the other object detection algorithms;
     - *features/*
+        - *extract_features.py*: Extract the deep features for each dataset object; 
+        - *combine_features.py*: Combine the features from each object into a features file for each fold configuration. Should be run after *extract_features.py*;   
     - *postprocessing/*
+        - *post_processing_opt.py*: Run the post-processing hyperparameter optimization algorithm;
+        - *save_post_data.py*: Save the classification output, after the post-processing module, for the best hyperparameters set found in the *post_processing_opt.py* run;
     - *results/*
+        - *metrics_results.py*: Extract metrics from the experiments output files;
     - *test/*
+        - *ablation_studies.py*: Create the ablation configurations and run each study;
+        - *classifier_outputs.py*: Generate the predicted resulting data;
+        - *stage_results.py*: Check the intermediary results. In other words, calculate the metrics at the output of each module;
+        - *test_classifier_training_data.py*: Generate the data to train the classifiers with all the objects except the test object.
+        - *test_classifier.py*: Train the classifiers with the data generated in *test_classifier_training_data.py*.
+
 - *src/* - Store the main code with the classes, functions and libraries needed to run rhe scripts.
 
 <a name="results"></a>
